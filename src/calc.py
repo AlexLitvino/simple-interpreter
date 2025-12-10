@@ -58,6 +58,11 @@ class Interpreter(object):
         # what token to create based on the single character
         current_char = text[self.pos]
 
+        # if current char is whitespace, skip it
+        while current_char == ' ':
+            self.pos += 1
+            current_char = text[self.pos]
+
         # if the character is a digit then convert it to
         # integer, create an INTEGER token, increment self.pos
         # index to point to the next character after the digit,
