@@ -1,14 +1,14 @@
 # Token types
 # EOF (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
-INTEGER, PLUS, MINUS, MULTIPLICATION, EOF = 'INTEGER', 'PLUS', 'MINUS', 'MULTIPLICATION', 'EOF'
+INTEGER, PLUS, MINUS, MULTIPLICATION, DIVISION, EOF = 'INTEGER', 'PLUS', 'MINUS', 'MULTIPLICATION', 'DIVISION', 'EOF'
 
 
 class Token(object):
     def __init__(self, type, value):
-        # token type: INTEGER, PLUS, MINUS, or EOF
+        # token type: INTEGER, PLUS, MINUS, MULTIPLICATION, DIVISION or EOF
         self.type = type
-        # token value: non-negative integer value, '+', '-', or None
+        # token value: non-negative integer value, '+', '-', '*', '/' or None
         self.value = value
 
     def __str__(self):
@@ -87,6 +87,10 @@ class Interpreter(object):
                 self.advance()
                 return Token(MULTIPLICATION, '*')
 
+            if self.current_char == '/':
+                self.advance()
+                return Token(DIVISION, '/')
+
             self.error()
 
         return Token(EOF, None)
@@ -107,6 +111,7 @@ class Interpreter(object):
         expr -> INTEGER PLUS INTEGER
         expr -> INTEGER MINUS INTEGER
         expr -> INTEGER MULTIPLICATION INTEGER
+        expr -> INTEGER DIVISION INTEGER
         """
         # set current token to the first token taken from the input
         self.current_token = self.get_next_token()
@@ -123,6 +128,8 @@ class Interpreter(object):
             self.eat(MINUS)
         elif op.type == MULTIPLICATION:
             self.eat(MULTIPLICATION)
+        elif op.type == DIVISION:
+            self.eat(DIVISION)
 
         # we expect the current token to be an integer
         right = self.current_token
@@ -141,6 +148,8 @@ class Interpreter(object):
             result = left.value - right.value
         elif op.type == MULTIPLICATION:
             result = left.value * right.value
+        elif op.type == DIVISION:
+            result = left.value / right.value
         return result
 
 
