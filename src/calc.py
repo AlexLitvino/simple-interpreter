@@ -2,14 +2,14 @@
 #
 # EOF (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
-INTEGER, PLUS, EOF = 'INTEGER', 'PLUS', 'EOF'
+INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
 
 
 class Token(object):
     def __init__(self, type, value):
         # token type: INTEGER, PLUS, or EOF
         self.type = type
-        # token value: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '+', or None
+        # token value: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '+', '-' or None
         self.value = value
 
     def __str__(self):
@@ -84,14 +84,22 @@ class Interpreter(object):
             self.pos += 1
             return token
 
+        if current_char == '-':
+            token = Token(MINUS, current_char)
+            self.pos += 1
+            return token
+
         self.error()
 
-    def eat(self, token_type):
+    def eat(self, token_type: str | tuple):
         # compare the current token type with the passed token
         # type and if they match then "eat" the current token
         # and assign the next token to the self.current_token,
         # otherwise raise an exception.
-        if self.current_token.type == token_type:
+        if isinstance(token_type, str):
+            token_type = (token_type, )
+
+        if self.current_token.type in token_type:
             self.current_token = self.get_next_token()
         else:
             self.error()
@@ -107,7 +115,7 @@ class Interpreter(object):
 
         # we expect the current token to be a '+' token
         op = self.current_token
-        self.eat(PLUS)
+        self.eat((PLUS, MINUS))
 
         # we expect the current token to be a single-digit integer
         right = self.current_token
@@ -119,7 +127,14 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of adding two integers, thus
         # effectively interpreting client input
-        result = left.value + right.value
+
+        if op.type == PLUS:
+            result = left.value + right.value
+        elif op.type == MINUS:
+            result = left.value - right.value
+        else:
+            raise Exception(f'{op.type} is not supported operation')
+
         return result
 
 
