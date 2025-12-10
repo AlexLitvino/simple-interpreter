@@ -120,7 +120,7 @@ class Interpreter(object):
         left = self.current_token
         self.eat(INTEGER)
 
-        # we expect the current token to be either a '+', '-' or '*'
+        # we expect the current token to be either a '+', '-', '*' or '/'
         op = self.current_token
         if op.type == PLUS:
             self.eat(PLUS)
