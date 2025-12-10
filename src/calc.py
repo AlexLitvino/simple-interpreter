@@ -9,7 +9,7 @@ class Token(object):
     def __init__(self, type, value):
         # token type: INTEGER, PLUS, or EOF
         self.type = type
-        # token value: 0, 1, 2. 3, 4, 5, 6, 7, 8, 9, '+', or None
+        # token value: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '+', or None
         self.value = value
 
     def __str__(self):
@@ -63,13 +63,20 @@ class Interpreter(object):
             self.pos += 1
             current_char = text[self.pos]
 
-        # if the character is a digit then convert it to
+        # if the consecutive characters are digits then convert them to
         # integer, create an INTEGER token, increment self.pos
         # index to point to the next character after the digit,
         # and return the INTEGER token
-        if current_char.isdigit():
-            token = Token(INTEGER, int(current_char))
-            self.pos += 1
+        digits = []
+        while current_char.isdigit():
+            digits.append(current_char)
+            if self.pos < len(text) - 1:
+                self.pos += 1
+                current_char = text[self.pos]
+            else:
+                break
+        if digits:
+            token = Token(INTEGER, int(''.join(digits)))
             return token
 
         if current_char == '+':
