@@ -120,37 +120,45 @@ class Interpreter(object):
         left = self.current_token
         self.eat(INTEGER)
 
-        # we expect the current token to be either a '+', '-', '*' or '/'
-        op = self.current_token
-        if op.type == PLUS:
-            self.eat(PLUS)
-        elif op.type == MINUS:
-            self.eat(MINUS)
-        elif op.type == MULTIPLICATION:
-            self.eat(MULTIPLICATION)
-        elif op.type == DIVISION:
-            self.eat(DIVISION)
+        while True:
 
-        # we expect the current token to be an integer
-        right = self.current_token
-        self.eat(INTEGER)
-        # after the above call the self.current_token is set to
-        # EOF token
+            # we expect the current token to be either a '+', '-', '*' or '/'
+            op = self.current_token
+            if op.type == PLUS:
+                self.eat(PLUS)
+            elif op.type == MINUS:
+                self.eat(MINUS)
+            elif op.type == MULTIPLICATION:
+                self.eat(MULTIPLICATION)
+            elif op.type == DIVISION:
+                self.eat(DIVISION)
 
-        # at this point either the INTEGER PLUS INTEGER or
-        # the INTEGER MINUS INTEGER sequence of tokens
-        # has been successfully found and the method can just
-        # return the result of adding or subtracting two integers,
-        # thus effectively interpreting client input
-        if op.type == PLUS:
-            result = left.value + right.value
-        elif op.type == MINUS:
-            result = left.value - right.value
-        elif op.type == MULTIPLICATION:
-            result = left.value * right.value
-        elif op.type == DIVISION:
-            result = left.value / right.value
-        return result
+            # we expect the current token to be an integer
+            right = self.current_token
+            self.eat(INTEGER)
+            # after the above call the self.current_token is set to
+            # EOF token
+
+            # at this point either the INTEGER PLUS INTEGER or
+            # the INTEGER MINUS INTEGER sequence of tokens
+            # has been successfully found and the method can just
+            # return the result of adding or subtracting two integers,
+            # thus effectively interpreting client input
+            if op.type == PLUS:
+                result = left.value + right.value
+            elif op.type == MINUS:
+                result = left.value - right.value
+            elif op.type == MULTIPLICATION:
+                result = left.value * right.value
+            elif op.type == DIVISION:
+                result = left.value / right.value
+
+            left = Token(INTEGER, result)
+
+            if self.current_char is None:
+                break
+
+        return left.value
 
 
 def main():
