@@ -3,26 +3,26 @@ import unittest
 
 class LexerTestCase(unittest.TestCase):
     def makeLexer(self, text):
-        from calc4 import Lexer
+        from calc import Lexer
         lexer = Lexer(text)
         return lexer
 
     def test_lexer_integer(self):
-        from calc4 import INTEGER
+        from calc import INTEGER
         lexer = self.makeLexer('234')
         token = lexer.get_next_token()
         self.assertEqual(token.type, INTEGER)
         self.assertEqual(token.value, 234)
 
     def test_lexer_mul(self):
-        from calc4 import MUL
+        from calc import MUL
         lexer = self.makeLexer('*')
         token = lexer.get_next_token()
         self.assertEqual(token.type, MUL)
         self.assertEqual(token.value, '*')
 
     def test_lexer_div(self):
-        from calc4 import DIV
+        from calc import DIV
         lexer = self.makeLexer(' / ')
         token = lexer.get_next_token()
         self.assertEqual(token.type, DIV)
@@ -31,7 +31,7 @@ class LexerTestCase(unittest.TestCase):
 
 class InterpreterTestCase(unittest.TestCase):
     def makeInterpreter(self, text):
-        from calc4 import Lexer, Interpreter
+        from calc import Lexer, Interpreter
         lexer = Lexer(text)
         interpreter = Interpreter(lexer)
         return interpreter
