@@ -23,3 +23,10 @@ When you do that, think about components involved: a lexer that takes an input a
 a parser that feeds off the stream of the tokens provided by the lexer and tries to recognize a structure in that stream, 
 and an interpreter that generates results after the parser has successfully parsed (recognized) a valid arithmetic expression. 
 String those pieces together. Spend some time translating the knowledge you’ve acquired into a working interpreter for arithmetic expressions.
+
+
+## p04_grammar_intro
+1. Write a grammar that describes arithmetic expressions containing any number of +, -, *, or / operators. 
+With the grammar you should be able to derive expressions like “2 + 7 * 4”, “7 - 8 / 4”, “14 + 2 * 3 - 6 / 2”, and so on.
+2. Using the grammar, write an interpreter that can evaluate arithmetic expressions containing any number of +, -, *, or / operators. 
+Your interpreter should be able to handle expressions like “2 + 7 * 4”, “7 - 8 / 4”, “14 + 2 * 3 - 6 / 2”, and so on.
