@@ -2,14 +2,14 @@
 #
 # EOF (end-of-file) token is used to indicate that
 # there is no more input left for lexical analysis
-INTEGER, MUL, DIV, EOF = 'INTEGER', 'MUL', 'DIV', 'EOF'
+INTEGER, ADD, SUB, MUL, DIV, EOF = 'INTEGER', 'ADD', 'SUB', 'MUL', 'DIV', 'EOF'
 
 
 class Token(object):
     def __init__(self, type, value):
-        # token type: INTEGER, MUL, DIV, or EOF
+        # token type: INTEGER, ADD, SUB, MUL, DIV, or EOF
         self.type = type
-        # token value: non-negative integer value, '*', '/', or None
+        # token value: non-negative integer value, '+', '-', '*', '/', or None
         self.value = value
 
     def __str__(self):
@@ -74,6 +74,14 @@ class Lexer(object):
             if self.current_char.isdigit():
                 return Token(INTEGER, self.integer())
 
+            if self.current_char == '+':
+                self.advance()
+                return Token(ADD, '+')
+
+            if self.current_char == '-':
+                self.advance()
+                return Token(SUB, '-')
+
             if self.current_char == '*':
                 self.advance()
                 return Token(MUL, '*')
@@ -118,14 +126,20 @@ class Parser(object):
 
         Grammar:
 
-        expr   : factor ((MUL | DIV) factor)*
+        expr   : factor ((ADD | SUB | MUL | DIV) factor)*
         factor : INTEGER
         """
         self.factor()
 
-        while self.current_token.type in (MUL, DIV):
+        while self.current_token.type in (ADD, SUB, MUL, DIV):
             token = self.current_token
-            if token.type == MUL:
+            if token.type == ADD:
+                self.eat(ADD)
+                self.factor()
+            elif token.type == SUB:
+                self.eat(SUB)
+                self.factor()
+            elif token.type == MUL:
                 self.eat(MUL)
                 self.factor()
             elif token.type == DIV:
