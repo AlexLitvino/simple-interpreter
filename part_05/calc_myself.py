@@ -27,7 +27,7 @@ class Lexer:
 
     def integer(self):
         integer_str = ''
-        while self.current_symbol.isdigit():
+        while self.current_symbol is not None and self.current_symbol.isdigit():
             integer_str += self.current_symbol
             self.advance()
         return int(integer_str)
@@ -47,15 +47,19 @@ class Lexer:
                 return Token(INTEGER, self.integer())
 
             if self.current_symbol == '+':
+                self.advance()
                 return Token(ADD, '+')
 
             if self.current_symbol == '-':
+                self.advance()
                 return Token(SUB, '-')
 
             if self.current_symbol == '*':
+                self.advance()
                 return Token(MLP, '*')
 
             if self.current_symbol == '/':
+                self.advance()
                 return Token(DIV, '/')
 
             self.error()
@@ -89,11 +93,9 @@ class Interpreter:
             if self.current_token.type == MLP:
                 self.eat(MLP)
                 result *= self.factor()
-                self.eat(INTEGER)
             elif self.current_token.type == DIV:
                 self.eat(DIV)
                 result //= self.factor()
-                self.eat(INTEGER)
         return result
 
     def expr(self):
@@ -102,15 +104,13 @@ class Interpreter:
             if self.current_token.type == ADD:
                 self.eat(ADD)
                 result += self.term()
-                self.eat(INTEGER)
             elif self.current_token.type == SUB:
                 self.eat(SUB)
                 result -= self.term()
-                self.eat(INTEGER)
         return result
 
 
-lexer = Lexer('1 + 2 * 3')
+lexer = Lexer('1+2*3 +4 - 5 * 1')
 interpreter = Interpreter(lexer)
 result = interpreter.expr()
 print(result)
