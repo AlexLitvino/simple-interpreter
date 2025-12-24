@@ -71,7 +71,7 @@ class Interpreter:
 
     def __init__(self, lexer: Lexer):
         self.lexer = lexer
-        self.current_token = lexer.get_next_token()
+        self.current_token = self.lexer.get_next_token()
 
     def error(self):
         raise Exception('Parsing error')
