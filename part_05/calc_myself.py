@@ -1,4 +1,4 @@
-INTEGER, ADD, SUB, MLP, DIV, EOF = 'INTEGER', 'ADD', 'SUB', 'MLP', 'DIV', 'EOF'
+INTEGER, ADD, SUB, MLP, DIV, LPAREN, RPAREN, EOF = 'INTEGER', 'ADD', 'SUB', 'MLP', 'DIV', 'LPAREN', 'RPAREN', 'EOF'
 
 class Token:
 
@@ -62,6 +62,14 @@ class Lexer:
                 self.advance()
                 return Token(DIV, '/')
 
+            if self.current_symbol == '(':
+                self.advance()
+                return Token(LPAREN, '(')
+
+            if self.current_symbol == ')':
+                self.advance()
+                return Token(RPAREN, ')')
+
             self.error()
 
         return Token(EOF, None)
@@ -70,7 +78,7 @@ class Lexer:
 class Interpreter:
 
     def __init__(self, lexer: Lexer):
-        self.lexer = lexer
+        self.lexer = lexer 
         self.current_token = self.lexer.get_next_token()
 
     def error(self):
@@ -83,9 +91,16 @@ class Interpreter:
             self.current_token = self.lexer.get_next_token()
 
     def factor(self):
-        result = self.current_token
-        self.eat(INTEGER)
-        return result.value
+        if self.current_token.type == INTEGER:
+            result = self.current_token
+            self.eat(INTEGER)
+            return result.value
+        elif self.current_token.type == LPAREN:
+            self.eat(LPAREN)
+            result = self.expr()
+            self.eat(RPAREN)
+            return result
+
 
     def term(self):
         result = self.factor()
@@ -110,7 +125,7 @@ class Interpreter:
         return result
 
 
-lexer = Lexer('1+2*3 +4 - 5 * 1')
+lexer = Lexer('(1+2)*3 +4 - 5 * 1')
 interpreter = Interpreter(lexer)
 result = interpreter.expr()
 print(result)
