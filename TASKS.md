@@ -37,3 +37,8 @@ Your interpreter should be able to handle expressions like “2 + 7 * 4”, “7
 Write some tests for your interpreter, and make sure they pass.
 2. Extend the interpreter to handle arithmetic expressions containing parentheses 
 so that your interpreter could evaluate deeply nested arithmetic expressions like: 7 + 3 * (10 / (12 / (3 + 1) - 1))
+
+
+##  p06_parenthesized_expressions
+1. Write your own version of the interpreter of arithmetic expressions as described in this article. 
+Remember: repetition is the mother of all learning.
